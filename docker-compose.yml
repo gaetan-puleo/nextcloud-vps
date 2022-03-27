@@ -4,12 +4,26 @@ volumes:
   db:
 
 services:
+  reverse-proxy:
+    hostname: nextcloud-reverse-proxy
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./certs:/etc/nginx
+      - ./certs:/etc/ssl/private
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment: 
+      - TZ=${TZ}
+
   nextcloud-redis:
     image: redis
     container_name: nextcloud-redis
     restart: always
     environment: 
       - TZ=${TZ}
+
   nextcloud-db:
     image: mariadb
     hostname: nextcloud-db
@@ -23,6 +37,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - TZ=${TZ}
+      - HTTPS_METHOD=nohttps
 
   app:
     image: nextcloud:22
@@ -31,7 +46,7 @@ services:
       - nextcloud-db
       - nextcloud-redis
     ports:
-      - 80:80
+      - 8080:80
     links:
       - nextcloud-db
     volumes:
@@ -46,4 +61,5 @@ services:
       - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - TZ=${TZ}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
 
