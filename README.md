@@ -24,6 +24,13 @@ NEXTCLOUD_ADMIN_PASSWORD=
 
 # timezone
 TZ=Europe/Paris
+
+# NGINX
+VIRTUAL_HOST=
+
+# Letsencrypt
+LETSENCRYPT_HOST=
+DEFAULT_EMAIL=
 ```
 
 You need to fill all the fields

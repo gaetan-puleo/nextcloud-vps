@@ -1,9 +1,19 @@
-version: '3'
+version: '3.9'
 volumes:
   nextcloud:
   db:
+  certs:
+  acme:
+  vhost:
 
 services:
+  ssl: 
+    hostname: ssl
+    image: nginxproxy/acme-companion
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/tmp/docker.sock:ro
   reverse-proxy:
     hostname: nextcloud-reverse-proxy
     image: jwilder/nginx-proxy
@@ -11,9 +21,11 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./certs:/etc/nginx/certs
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     environment: 
+      - DHPARAM_GENERATION=false
       - TZ=${TZ}
 
   nextcloud-redis:
@@ -61,4 +73,5 @@ services:
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - TZ=${TZ}
       - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
 
