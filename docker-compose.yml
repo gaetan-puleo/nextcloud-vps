@@ -15,7 +15,8 @@ services:
       - acme:/etc/acme.sh
       - /var/run/docker.sock:/var/run/docker.sock:ro
   reverse-proxy:
-    hostname: nextcloud-reverse-proxy
+    hostname: nginx-proxy
+    container_name: nginx-proxy
     image: jwilder/nginx-proxy
     ports:
       - 80:80
