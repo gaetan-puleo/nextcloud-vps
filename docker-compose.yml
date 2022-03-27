@@ -45,6 +45,7 @@ services:
       - nextcloud-redis
     ports:
       - 8080:80
+      - 8081:443
     links:
       - nextcloud-db
     volumes:
