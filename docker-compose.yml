@@ -61,7 +61,8 @@ services:
     links:
       - nextcloud-db
     volumes:
-      - nextcloud:/var/www/html
+      - nextcloud:/var/www/html      
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
