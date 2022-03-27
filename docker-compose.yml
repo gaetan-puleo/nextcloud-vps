@@ -1,15 +1,19 @@
 version: '3'
-# volumes:
-  # nextcloud:
-  # db:
+volumes:
+  nextcloud:
+  db:
 
 services:
+  nextcloud-redis:
+    image: redis
+    container_name: nextcloud-redis
+    restart: always
   db:
     image: mariadb
     restart: always
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     volumes:
-      # - db:/var/lib/mysql
+      - db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -24,9 +28,10 @@ services:
     links:
       - db
     volumes:
-      # - nextcloud:/var/www/html
+      - nextcloud:/var/www/html
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_HOST=db
+      - REDIS_HOST=nextcloud-redis
