@@ -13,7 +13,7 @@ services:
     volumes:
       - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   reverse-proxy:
     hostname: nextcloud-reverse-proxy
     image: jwilder/nginx-proxy
@@ -62,7 +62,6 @@ services:
       - nextcloud-db
     volumes:
       - nextcloud:/var/www/html      
-      - /var/run/docker.sock:/tmp/docker.sock:ro
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
