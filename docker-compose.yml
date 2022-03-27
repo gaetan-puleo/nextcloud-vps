@@ -8,7 +8,9 @@ services:
     image: redis
     container_name: nextcloud-redis
     restart: always
-  db:
+    environment: 
+      - TZ=${TZ}
+  nextcloud-db:
     image: mariadb
     hostname: nextcloud-db
     restart: always
@@ -20,14 +22,18 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
+      - TZ=${TZ}
 
   app:
     image: nextcloud:22
     restart: always
+    depends_on:
+      - nextcloud-db
+      - nextcloud-redis
     ports:
-      - 8080:80
+      - 80:80
     links:
-      - db
+      - nextcloud-db
     volumes:
       - nextcloud:/var/www/html
     environment:
@@ -37,6 +43,7 @@ services:
       - MYSQL_HOST=nextcloud-db
       - REDIS_HOST=nextcloud-redis
       - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_TRUSTED_DOMAINS}
-      - NEXTCLOUD_ADMIN_USER=darth-vader
-      - NEXTCLOUD_ADMIN_PASSWORD=password
+      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+      - TZ=${TZ}
 
