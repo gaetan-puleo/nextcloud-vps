@@ -1,15 +1,18 @@
-version: '3.9'
+version: '2'
 volumes:
   nextcloud:
   db:
   certs:
   acme:
+  html:
   vhost:
 
 services:
   ssl: 
     hostname: ssl
     image: nginxproxy/acme-companion
+    volumes_from:
+      - reverse-proxy
     volumes:
       - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
@@ -24,6 +27,7 @@ services:
     volumes:
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     environment: 
       - DHPARAM_GENERATION=false
