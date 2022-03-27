@@ -37,3 +37,6 @@ services:
       - MYSQL_HOST=nextcloud-db
       - REDIS_HOST=nextcloud-redis
       - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_TRUSTED_DOMAINS}
+      - NEXTCLOUD_ADMIN_USER=darth-vader
+      - NEXTCLOUD_ADMIN_PASSWORD=password
+
