@@ -41,7 +41,8 @@ docker-compose up
 
 ## informations
 
-- files are stored in `./files`
+- nextcloud files are stored in `./files`
+- user files are stored in `./files/data` 
 - the db is stored in `./db`
 
 ## Todo before stable release
