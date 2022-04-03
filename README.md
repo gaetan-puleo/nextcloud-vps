@@ -38,3 +38,16 @@ You need to fill all the fields
 ```bash
 docker-compose up
 ```
+
+## informations
+
+- files are stored in `./files`
+- the db is stored in `./db`
+
+## Todo before stable release
+
+- [ ] backup database 
+- [ ] backup files
+- [ ] automate install
+- [ ] automate restore database
+- [ ] automate restore files
