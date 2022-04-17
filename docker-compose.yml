@@ -1,44 +1,17 @@
-version: '2'
+version: '3.8'
 volumes:
   nextcloud:
   db:
-  certs:
-  acme:
-  html:
-  vhost:
 
 services:
-  ssl: 
-    hostname: ssl
-    image: nginxproxy/acme-companion
-    volumes_from:
-      - reverse-proxy
-    volumes:
-      - certs:/etc/nginx/certs:rw
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-  reverse-proxy:
-    hostname: nginx-proxy
-    container_name: nginx-proxy
-    image: jwilder/nginx-proxy
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    environment: 
-      - DHPARAM_GENERATION=false
-      - TZ=${TZ}
-
   nextcloud-redis:
     image: redis
     container_name: nextcloud-redis
     restart: always
     environment: 
       - TZ=${TZ}
+    networks:
+      - nextcloud-nas
 
   nextcloud-db:
     image: mariadb
@@ -53,6 +26,8 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - TZ=${TZ}
+    networks:
+      - nextcloud-nas
 
   app:
     image: nextcloud:22
@@ -62,7 +37,6 @@ services:
       - nextcloud-redis
     ports:
       - 8080:80
-      - 8081:443
     links:
       - nextcloud-db
     volumes:
@@ -77,6 +51,8 @@ services:
       - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - TZ=${TZ}
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
-      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+    networks:
+      - nextcloud-nas
 
+networks:
+  nextcloud-nas:
