@@ -10,8 +10,6 @@ services:
     restart: always
     environment: 
       - TZ=${TZ}
-    networks:
-      - nextcloud-nas
 
   nextcloud-db:
     image: mariadb
@@ -26,8 +24,6 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - TZ=${TZ}
-    networks:
-      - nextcloud-nas
 
   app:
     image: nextcloud:22
@@ -52,8 +48,8 @@ services:
       - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - TZ=${TZ}
-    networks:
-      - nextcloud-nas
 
 networks:
-  nextcloud-nas:
+  default:
+    external:
+      name: nextcloud-nas
